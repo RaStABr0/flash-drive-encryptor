@@ -23,7 +23,7 @@ namespace lab2
             _plugWatcher.EventArrived += OnDevicePlugged;
             _plugWatcher.Start();
             
-            var unplugQuery = new WqlEventQuery("SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 1");
+            var unplugQuery = new WqlEventQuery("SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 3");
             _unplugWatcher = new ManagementEventWatcher(unplugQuery);
             _unplugWatcher.EventArrived += OnDeviceUnplugged;
             _unplugWatcher.Start();
@@ -45,6 +45,9 @@ namespace lab2
         {
             _plugWatcher.Stop();
             _plugWatcher.Dispose();
+            
+            _unplugWatcher.Stop();
+            _unplugWatcher.Dispose();
         }
 
         ~UsbFlashController() => Dispose();
