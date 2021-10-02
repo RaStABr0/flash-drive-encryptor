@@ -1,0 +1,13 @@
+D:\МГТУ\11 семестр\ПАС\lab2\lab2\lab2\bin\Debug\lab2.exe.config
+D:\МГТУ\11 семестр\ПАС\lab2\lab2\lab2\bin\Debug\lab2.exe
+D:\МГТУ\11 семестр\ПАС\lab2\lab2\lab2\bin\Debug\lab2.pdb
+D:\МГТУ\11 семестр\ПАС\lab2\lab2\lab2\obj\Debug\lab2.csprojAssemblyReference.cache
+D:\МГТУ\11 семестр\ПАС\lab2\lab2\lab2\obj\Debug\lab2.Properties.Resources.resources
+D:\МГТУ\11 семестр\ПАС\lab2\lab2\lab2\obj\Debug\lab2.csproj.GenerateResource.cache
+D:\МГТУ\11 семестр\ПАС\lab2\lab2\lab2\obj\Debug\lab2.csproj.CoreCompileInputs.cache
+D:\МГТУ\11 семестр\ПАС\lab2\lab2\lab2\obj\Debug\lab2.exe
+D:\МГТУ\11 семестр\ПАС\lab2\lab2\lab2\obj\Debug\lab2.pdb
+D:\МГТУ\11 семестр\ПАС\lab2\lab2\lab2\bin\Debug\System.CodeDom.dll
+D:\МГТУ\11 семестр\ПАС\lab2\lab2\lab2\bin\Debug\System.CodeDom.xml
+D:\МГТУ\11 семестр\ПАС\lab2\lab2\lab2\obj\Debug\lab2.csproj.CopyComplete
+D:\МГТУ\11 семестр\ПАС\lab2\lab2\lab2\obj\Debug\lab2.DeviceForm.resources
