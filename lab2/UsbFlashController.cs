@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Management;
+using Microsoft.EntityFrameworkCore;
 
 namespace lab2
 {
@@ -32,6 +33,35 @@ namespace lab2
         private void OnDevicePlugged(object sender, EventArrivedEventArgs e)
         {
             var driveName = e.NewEvent["DriveName"].ToString();
+            
+            var searcher = new ManagementObjectSearcher(@"Select * From Win32_LogicalDisk");
+            var devices = searcher.Get();
+
+            var pluggedDeviceId = string.Empty;
+            
+            foreach (var device in devices)
+            {
+                const int removableDeviceType = 2;
+                
+                var driveType = (uint) device["DriveType"];
+
+                if (driveType != removableDeviceType) continue;
+
+                var letter =  device["DeviceID"].ToString();
+
+                if (!letter.Equals(driveName)) continue; 
+                
+                pluggedDeviceId = device["VolumeSerialNumber"].ToString();
+                
+                break;
+            }
+
+            var pluggedDevice = new UsbDrive(pluggedDeviceId);
+            
+            // Program.Db.UsbDrives.Add(pluggedDevice);
+            // Program.Db.SaveChanges();
+            
+            //TODO: переработать событие под устройство вместо строки
             DevicePlugged?.Invoke(driveName);
         }
 
