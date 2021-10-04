@@ -35,7 +35,7 @@ namespace lab2
             _unplugWatcher.Start();
         }
         
-        public UsbDrive GetDevice(string name)
+        public UsbDrive GetDrive(string name)
         {
             var searcher = new ManagementObjectSearcher(@"Select * From Win32_LogicalDisk");
             var devices = searcher.Get();
@@ -75,16 +75,22 @@ namespace lab2
             return pluggedDevice;
         }
 
+        public void UpdateDrive(UsbDrive usbDrive)
+        {
+            _db.UsbDrives.Update(usbDrive);
+            _db.SaveChanges();
+        }
+
         private void OnDevicePlugged(object sender, EventArrivedEventArgs e)
         {
-            var driveName = e.NewEvent["DriveName"].ToString();
-            DevicePlugged?.Invoke(driveName);
+            var drivePath = e.NewEvent["DriveName"].ToString();
+            DevicePlugged?.Invoke(drivePath);
         }
 
         private void OnDeviceUnplugged(object sender, EventArrivedEventArgs e)
         {
-            var driveName = e.NewEvent["DriveName"].ToString();
-            DeviceUnplugged?.Invoke(driveName);
+            var drivePath = e.NewEvent["DriveName"].ToString();
+            DeviceUnplugged?.Invoke(drivePath);
         }
         
         public void Dispose()
