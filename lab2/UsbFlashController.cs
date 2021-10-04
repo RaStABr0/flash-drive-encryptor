@@ -1,6 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Management;
-using Microsoft.EntityFrameworkCore;
 
 namespace lab2
 {
@@ -13,12 +14,16 @@ namespace lab2
         
         private readonly ManagementEventWatcher _unplugWatcher;
 
+        private readonly Db _db;
+
         public event Action<string> DevicePlugged;
         
         public event Action<string> DeviceUnplugged;
         
         public UsbFlashController()
         {
+            _db = new Db();
+
             var plugQuery = new WqlEventQuery("SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 2");
             _plugWatcher = new ManagementEventWatcher(plugQuery);
             _plugWatcher.EventArrived += OnDevicePlugged;
@@ -29,11 +34,9 @@ namespace lab2
             _unplugWatcher.EventArrived += OnDeviceUnplugged;
             _unplugWatcher.Start();
         }
-
-        private void OnDevicePlugged(object sender, EventArrivedEventArgs e)
+        
+        public UsbDrive GetDevice(string name)
         {
-            var driveName = e.NewEvent["DriveName"].ToString();
-            
             var searcher = new ManagementObjectSearcher(@"Select * From Win32_LogicalDisk");
             var devices = searcher.Get();
 
@@ -42,26 +45,39 @@ namespace lab2
             foreach (var device in devices)
             {
                 const int removableDeviceType = 2;
-                
                 var driveType = (uint) device["DriveType"];
 
                 if (driveType != removableDeviceType) continue;
 
                 var letter =  device["DeviceID"].ToString();
 
-                if (!letter.Equals(driveName)) continue; 
+                if (!letter.Equals(name)) continue; 
                 
                 pluggedDeviceId = device["VolumeSerialNumber"].ToString();
-                
+
                 break;
             }
 
-            var pluggedDevice = new UsbDrive(pluggedDeviceId);
+            if (string.IsNullOrEmpty(pluggedDeviceId))
+            {
+                throw new DriveNotFoundException("Drive not found!");
+            }
+
+            var pluggedDevice = _db.UsbDrives
+                .FirstOrDefault(ud => ud.SerialNumber.Equals(pluggedDeviceId));
+
+            if (pluggedDevice != null) return pluggedDevice;
             
-            // Program.Db.UsbDrives.Add(pluggedDevice);
-            // Program.Db.SaveChanges();
+            pluggedDevice = new UsbDrive(pluggedDeviceId);
+            _db.UsbDrives.Add(pluggedDevice);
+            _db.SaveChanges();
             
-            //TODO: переработать событие под устройство вместо строки
+            return pluggedDevice;
+        }
+
+        private void OnDevicePlugged(object sender, EventArrivedEventArgs e)
+        {
+            var driveName = e.NewEvent["DriveName"].ToString();
             DevicePlugged?.Invoke(driveName);
         }
 
@@ -70,7 +86,7 @@ namespace lab2
             var driveName = e.NewEvent["DriveName"].ToString();
             DeviceUnplugged?.Invoke(driveName);
         }
-
+        
         public void Dispose()
         {
             _plugWatcher.Stop();

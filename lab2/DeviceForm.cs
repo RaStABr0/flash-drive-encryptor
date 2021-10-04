@@ -6,6 +6,10 @@ namespace lab2
     public partial class DeviceForm : Form
     {
         private static readonly UsbFlashController FLASH_CONTROLLER = new();
+
+        private UsbDrive _currentDrive;
+
+        private string _currentDrivePath;
         
         private readonly MethodInvoker _showSync;
         
@@ -17,20 +21,9 @@ namespace lab2
             
             _showSync = Show;
             _hideSync = Hide;
-            
-            FLASH_CONTROLLER.DevicePlugged += driveName =>
-            {
-                if (!IsHandleCreated) return;
-                
-                Invoke(_showSync);
-            };
 
-            FLASH_CONTROLLER.DeviceUnplugged += driveName =>
-            {
-                if (!IsHandleCreated) return;
-                
-                Invoke(_hideSync);
-            };
+            FLASH_CONTROLLER.DevicePlugged += OnDevicePlugged;
+            FLASH_CONTROLLER.DeviceUnplugged += OnDeviceUnplugged;
         }
 
         private new void Show()
@@ -43,6 +36,26 @@ namespace lab2
         {
             WindowState = FormWindowState.Minimized;
             ShowInTaskbar = false;
+        }
+
+        private void OnDevicePlugged(string name)
+        {
+            if (!IsHandleCreated) return;
+            
+            Invoke(_showSync);
+
+            _currentDrivePath = name;
+            _currentDrive = FLASH_CONTROLLER.GetDevice(name);
+        }
+        
+        private void OnDeviceUnplugged(string name)
+        {
+            if (!IsHandleCreated) return;
+                
+            Invoke(_hideSync);
+
+            _currentDrive = null;
+            _currentDrivePath = null;
         }
         
         private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e) => Show();
