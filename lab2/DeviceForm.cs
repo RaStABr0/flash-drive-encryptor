@@ -19,7 +19,6 @@ namespace lab2
         
         private readonly MethodInvoker _hideSync;
         
-        //TODO: скрыть форму на старте.
         public DeviceForm()
         {
             InitializeComponent();
@@ -29,8 +28,12 @@ namespace lab2
 
             FLASH_CONTROLLER.DevicePlugged += OnDevicePlugged;
             FLASH_CONTROLLER.DeviceUnplugged += OnDeviceUnplugged;
-            
-            //Hide();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            Hide();
         }
 
         private new void Show()
