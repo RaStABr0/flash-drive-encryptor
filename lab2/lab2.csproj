@@ -204,6 +204,7 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Cryptography.cs" />
         <Compile Include="Db\Db.cs" />
         <Compile Include="DeviceForm.cs">
           <SubType>Form</SubType>
@@ -211,6 +212,7 @@
         <Compile Include="DeviceForm.Designer.cs">
           <DependentUpon>DeviceForm.cs</DependentUpon>
         </Compile>
+        <Compile Include="DirectoryEncryption.cs" />
         <Compile Include="UsbDrive.cs" />
         <Compile Include="UsbFlashController.cs" />
         <Compile Include="Program.cs" />

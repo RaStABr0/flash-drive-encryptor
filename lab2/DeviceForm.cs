@@ -99,13 +99,12 @@ namespace lab2
             
             if (_currentDrive.IsEncrypted)
             {
-                //TODO: расшифровать
-                
+                DirectoryEncryption.Encrypt(_currentDrivePath, false);
                 isDriveEncrypted = false;
             }
             else
             {
-                //TODO: зашифровать.
+                DirectoryEncryption.Encrypt(_currentDrivePath, true);
                 
                 _currentDrive.IsIgnored = false;
                 isDriveEncrypted = true;
